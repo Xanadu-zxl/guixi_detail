@@ -521,4 +521,57 @@ export default {
     })
     return payload
   },
+  createdTableHeadersDetail(fields, admin) {
+    let columns = []
+    if (admin === 'admin') {
+      fields.forEach((field) => {
+        let column = {}
+        switch (field.identity_key) {
+          case 'saler':
+            column.title = field.title
+            column.key = field.identity_key
+            column.width = 100
+            column.resizable = true
+            column.fixed = 'left'
+            break
+          case 'saler_phone':
+            break
+
+          default:
+            column.title = field.title
+            column.key = field.identity_key
+            column.width = 150
+            column.resizable = true
+            break
+        }
+        columns.push(column)
+      })
+    } else {
+      fields.forEach((field) => {
+        let column = {}
+        switch (field.identity_key) {
+          case 'saler':
+            column.title = field.title
+            column.key = field.identity_key
+            column.width = 100
+            column.resizable = true
+            column.fixed = 'left'
+            break
+          case 'saler_phone':
+            break
+          case 'phone':
+            break
+
+          default:
+            column.title = field.title
+            column.key = field.identity_key
+            column.width = 150
+            column.resizable = true
+            break
+        }
+        columns.push(column)
+      })
+    }
+    return columns
+  },
 }

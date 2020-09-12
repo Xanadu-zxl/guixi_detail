@@ -27,8 +27,8 @@ export default {
         client_secret: '2e47adc25c9584deabd3866923ad5784236149a5a087442e8b3320ba6eaa35d2',
         code: this.code,
         grant_type: 'authorization_code',
-        // redirect_uri: 'http://localhost:8080/guixi_detail/saler/code',
-        redirect_uri: 'http://shandenabian.skylarkly.com/guixi_detail/saler/code',
+        // redirect_uri: 'http://localhost:8080/guixi_detail/code',
+        redirect_uri: 'https://gxzh.cdht.gov.cn/guixi_detail/code',
       },
     }).then((res) => {
       let token = res.data.access_token
