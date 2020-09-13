@@ -7,11 +7,11 @@ import http from '../unit/http'
 
 let headerV4 = {
   Authorization:
-    '7e9559776d2e4aac37509df2bec2c40b49013cb9b0a22ca1ee08f7986b243b73:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.u5GQ2tNmjF6hc_um_VLdPU2GPzPLB0_LBK9rayQw5Bk',
+    'd25adaf98146c4f32c127e6c094f6f672db695970692fc473a9e8e861b304f1a:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.plo6dlWfBGCS9kH8765wWR9aQo_-SyFQw5kRBBio9Y0',
 }
 let headerSQL = {
   Authorization:
-    'gid://slp-table-mapper/Namespace/1&eyJhbGciOiJIUzI1NiJ9.eyJnaWQiOiJnaWQ6Ly9za3lsYXJrL05hbWVzcGFjZS8xIn0.d4LgEu5ErE0ORVcAABxUCfr5Q_ANYOwBhUL7M_y4Kgo',
+    'gid://slp-table-mapper/Namespace/1&eyJhbGciOiJIUzI1NiJ9.eyJnaWQiOiJnaWQ6Ly9za3lsYXJrL05hbWVzcGFjZS8xIn0.TwAB1xT_B-hn74leeBM_nY82KtewYvd8OiasRrXpZL0',
 }
 // admin
 export default {
@@ -47,17 +47,5 @@ export default {
   // sql查询
   getSqlJsonAPI(sql) {
     return http.get(`/api/table_mappers/json_api/execute_select_sql?sql=` + sql, '', headerSQL)
-  },
-  // 渲染流程
-  getflowAPI(flowID) {
-    return http.get(`/api/v4/yaw/flows/${flowID}`, '', headerV4)
-  },
-  // 流程填写
-  postflowAPI(flowID, data) {
-    return http.post(`/api/v4/yaw/flows/${flowID}/journeys`, data, headerV4)
-  },
-  // 请求组织成员
-  getOrganizationsAPI(organizationID) {
-    return http.get(`/api/v4/organizations/${organizationID}/members`, '', headerV4)
   },
 }
