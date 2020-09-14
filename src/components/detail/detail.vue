@@ -1,11 +1,14 @@
 <template>
   <div class="detail_content">
     <div class="detail-select">
-      <select class="select" v-model="searchTitle.value">
-        <option :key="index" :value="option" class="option" v-for="(option, index) in columnsTitle">
-          {{ option }}
-        </option>
-      </select>
+      <div class="select">
+        <select v-model="searchTitle.value">
+          <option :key="index" :value="option" class="option" v-for="(option, index) in columnsTitle">
+            {{ option }}
+          </option>
+        </select>
+        <van-icon name="arrow-down" />
+      </div>
     </div>
 
     <header class="header">
@@ -34,20 +37,20 @@
         :loading="loading"
       ></Table>
       <!-- 分页器 -->
-      <Page
-        :total="page.total"
-        :page-size="page.pageSize"
-        @on-change="currentChange"
-        prev-text="上一页"
-        next-text="下一页"
-        show-total
-        class-name="page"
+
+      <div class="title">共 {{ page.total }} 条</div>
+      <van-pagination
+        v-model="currentPage"
+        :total-items="page.total"
+        :show-page-size="5"
+        @change="currentChange()"
+        force-ellipses
       />
     </div>
 
     <!-- 弹框 -->
     <van-popup v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
-      <header class="popup-header">客户详情</header>
+      <header class="popup-header">桂溪街道数据统计详情</header>
       <div class="popup">
         <div v-for="item in showArr" :key="item.id">
           <p v-if="item.identity_key === 'depict'">
@@ -75,6 +78,7 @@ import total from '@/api/total'
 export default {
   data() {
     return {
+      currentPage: 1,
       show: false,
       showArr: [],
       showObj: {},
@@ -145,6 +149,10 @@ export default {
     })
   },
   methods: {
+    currentChange() {
+      this.page.current = this.page.pageSize * (this.currentPage - 1)
+      this.onSearch()
+    },
     getPageData() {
       this.loading = true
       let sql = `select * from guixi_form_1_149  ORDER BY created_at DESC limit ${this.page.pageSize} OFFSET ${this.page.current}`
@@ -159,10 +167,7 @@ export default {
         this.loading = false
       })
     },
-    currentChange(current) {
-      this.page.current = this.page.pageSize * (current - 1)
-      this.onSearch()
-    },
+
     onSearch() {
       this.loading = true
       let sql = `select * from guixi_form_1_149  where department ~ '${this.search.value}' or  category ~ '${this.search.value}' or project ~ '${this.search.value}' or  unit ~ '${this.search.value}' ORDER BY created_at  DESC limit ${this.page.pageSize} OFFSET ${this.page.current}`
@@ -278,7 +283,7 @@ export default {
   }
   .ivu-table th {
     color: #fff;
-    background: #6788e7;
+    background: #1989fa;
     font-weight: 600;
   }
   .ivu-table-cell {
@@ -292,22 +297,12 @@ export default {
   .table {
     margin: 0 auto;
     position: relative;
+  }
 
-    .page {
-      position: absolute;
-      bottom: -150px;
-      width: 100%;
-      right: 50%;
-      transform: translateX(50%);
-    }
-
-    .ivu-page-total {
-      font-size: 14px;
-      position: absolute;
-      bottom: 80px;
-      right: 50%;
-      transform: translateX(50%);
-    }
+  .title {
+    line-height: 1.25rem;
+    height: 1.25rem;
+    margin: 1rem;
   }
 
   .popup {
@@ -327,28 +322,14 @@ export default {
       color: black;
     }
   }
-
-  .ivu-page-custom-text {
-    width: 88px;
-    height: 40px;
-    background: #ffffff;
-    border: 1px solid #dcdee2;
-    border-radius: 4px;
-    padding: 5px 2px;
-  }
-  .ivu-page-item-active {
-    background: #6788e7;
-  }
-  .ivu-page-item-active a,
-  .ivu-page-item-active:hover a {
-    color: #fff;
+  .van-pagination {
+    justify-content: center;
   }
 
-  .ivu-page-next:hover a,
-  .ivu-page-prev:hover a {
-    color: #6788e7;
+  .van-pagination__next,
+  .van-pagination__prev {
+    max-width: 6.25rem;
   }
-
   .van-cell {
     border-bottom: 1px solid #ebedf0;
   }
@@ -364,7 +345,7 @@ export default {
     line-height: 52px;
     font-size: 16px;
     font-weight: 600;
-    background: #6788e7;
+    background: #1989fa;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -378,13 +359,19 @@ export default {
     text-align: left;
 
     .select {
-      border: none;
-      border-left: 4px solid #6788e7;
-      font-family: PingFangSC-Medium;
-      font-size: 18px;
-      color: #262626;
-      outline: none;
-      padding-left: 5px;
+      border-left: 4px solid #1989fa;
+      padding-left: 10px;
+
+      select {
+        -webkit-appearance: none;
+        border: none;
+        font-family: PingFangSC-Medium;
+        font-size: 18px;
+        color: #262626;
+        background: #fff;
+        outline: none;
+        width: 150px;
+      }
     }
   }
 }

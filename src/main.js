@@ -8,7 +8,7 @@ import axios from 'axios'
 import VueCookies from 'vue-cookies'
 import 'view-design/dist/styles/iview.css'
 import '@vant/touch-emulator'
-import { Table, Page } from 'view-design'
+import { Table, Page, Select } from 'view-design'
 import {
   Tab,
   Tabs,
@@ -34,17 +34,20 @@ import {
   CheckboxGroup,
   Loading,
   Switch,
+  Pagination,
 } from 'vant'
 
 Vue.prototype.$axios = axios
 Vue.component('Table', Table)
 Vue.component('Page', Page)
+Vue.component('Select', Select)
 Vue.use(VueCookies)
 Vue.use(DropdownMenu)
 Vue.use(Toast)
 Vue.use(Search)
 Vue.use(Icon)
 Vue.use(DropdownItem)
+Vue.use(Pagination)
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(Checkbox)
