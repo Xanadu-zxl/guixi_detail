@@ -134,6 +134,7 @@ export default {
     },
   },
   mounted() {
+    document.title = '桂溪街道数据统计'
     api.getFormAPI(this.tableID).then((res) => {
       // 创建表头
       this.columns = total.createdTableHeadersDetail(res.data.fields)
