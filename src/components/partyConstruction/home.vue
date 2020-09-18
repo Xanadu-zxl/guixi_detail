@@ -4,27 +4,17 @@
       <div class="banner">
         <img class="img" src="../../assets/img/banner.png" alt="" />
       </div>
-      <div class="content">
-        <div class="item">
-          <div class="icon">1</div>
-          <van-cell class="title" title="党建地图" is-link url="/vant/mobile.html" />
-        </div>
-        <div class="item">
-          <div class="icon">1</div>
-          <van-cell class="title" title="党建地图" is-link url="/vant/mobile.html" />
-        </div>
-        <div class="item">
-          <div class="icon">1</div>
-          <van-cell class="title" title="党建地图" is-link url="/vant/mobile.html" />
-        </div>
-        <div class="item">
-          <div class="icon">1</div>
-          <van-cell class="title" title="党建地图" is-link url="/vant/mobile.html" />
+      <van-loading type="spinner" v-show="showLoading" vertical>加载中...</van-loading>
+
+      <div class="content" v-show="!showLoading">
+        <div class="item" v-for="item in list" :key="item.id">
+          <div class="icon"><img :src="item.icon" alt="" /></div>
+          <van-cell class="title" :title="item.title" is-link :url="item.href" />
         </div>
       </div>
 
-      <van-cell icon="phone" class="phone" title="电话咨询" is-link url="/vant/mobile.html" />
-      <footer class="footer">
+      <van-cell icon="phone" class="phone" title="电话咨询" is-link v-show="!showLoading" />
+      <footer class="footer" v-show="!showLoading">
         <p>地址：四川省成都市武侯区天仁路176号</p>
       </footer>
     </div>
@@ -34,18 +24,29 @@
 </template>
 <script>
 import homeNav from '@/components/page/nav'
+import api from '@/api/api'
 
 export default {
   data() {
     return {
       replace: true,
+      showLoading: true,
+      list: [],
     }
   },
   components: {
     homeNav,
   },
   mounted() {
+    let sql = `select * from guixi_form_1_150 where show='是';`
+    api.getSqlJsonAPI(sql).then((res) => {
+      this.list = res.data
+      this.showLoading = false
+    })
     document.title = '桂溪党建'
+    api.getResponsesAPI(150).then((res) => {
+      console.log(res.data)
+    })
   },
 }
 </script>
@@ -84,6 +85,9 @@ export default {
         background: #ff5722;
         border-radius: 8px;
         margin: 1.125rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       .title {
