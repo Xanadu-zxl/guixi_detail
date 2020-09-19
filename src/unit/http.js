@@ -1,6 +1,6 @@
 /** **   http.js   ****/
 // 导入封装好的axios实例
-import request from "./request";
+import request from './request'
 
 const http = {
   /**
@@ -12,32 +12,32 @@ const http = {
 
   get(url, params, headers) {
     const config = {
-      method: "get",
+      method: 'get',
       url: url,
       params: params,
-      headers // 权限
-    };
+      headers, // 权限
+    }
     // if (params) config.params = params
-    return request(config);
+    return request(config)
   },
   post(url, params, headers) {
     const config = {
-      method: "post",
+      method: 'post',
       url: url,
-      headers: headers
-    };
-    if (params) config.data = params;
-    return request(config);
+      headers: headers,
+    }
+    if (params) config.data = params
+    return request(config)
   },
   put(url, params, headers) {
     const config = {
-      method: "put",
+      method: 'put',
       url: url,
-      headers: headers
-    };
-    if (params) config.data = params;
-    return request(config);
-  }
-};
+      headers: headers,
+    }
+    if (params) config.data = params
+    return request(config)
+  },
+}
 // 导出
-export default http;
+export default http

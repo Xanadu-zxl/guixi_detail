@@ -31,4 +31,9 @@ export default [
     name: 'my',
     component: () => import(/* webpackChunkName:'code' */ '@/components/partyConstruction/my'),
   },
+  {
+    path: '/guixi_detail/particular',
+    name: 'particular',
+    component: () => import(/* webpackChunkName:'code' */ '@/components/partyConstruction/particular'),
+  },
 ]
