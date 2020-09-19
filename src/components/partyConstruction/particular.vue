@@ -81,6 +81,8 @@ export default {
             res.data.entries.forEach((res) => {
               if (res.field_id === 7784) {
                 this.imgUrl.push(res.attachment.download_url)
+              } else {
+                this.imgUrl.push(localStorage.getItem('user_imgUrl'))
               }
             })
             this.addValue(res.data.entries, this.formData)

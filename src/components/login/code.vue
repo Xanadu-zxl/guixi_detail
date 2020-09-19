@@ -15,8 +15,8 @@ export default {
       code: '',
       token: '',
       path: '',
-      url: 'http://localhost:10777/guixi_detail/code',
-      // url: 'https://gxzh.cdht.gov.cn/guixi_detail/code',
+      // url: 'http://localhost:10777/guixi_detail/code',
+      url: 'https://gxzh.cdht.gov.cn/guixi_detail/code',
       client_id: 'b42b2c8778deb85576ff4476161e7b861661fa1e9f3b5ac53ce85135f2a33eca',
       client_secret: '9af26e14165cf4d9ab0bb7dcf6938a4815660e80b61a5089225ea02c30ebd9b5',
     }
@@ -44,7 +44,6 @@ export default {
       }).then((res) => {
         let token = res.data.access_token
         api.getUserAPI(token).then((res) => {
-          console.log(res.data)
           const data = res.data
           localStorage.setItem('user_id', data.id)
           localStorage.setItem('user_phone', data.phone)
