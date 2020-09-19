@@ -24,4 +24,23 @@ export default {
     })
     return columns
   },
+  ListData(fields) {
+    let tableList = []
+    fields.forEach((field) => {
+      let objData = {}
+
+      switch (field.type) {
+        default: {
+          objData.field_id = field.id
+          objData.identity_key = field.identity_key
+          objData.type = field.type
+          objData.title = field.title
+          objData.value = ''
+        }
+      }
+
+      tableList.push(objData)
+    })
+    return tableList
+  },
 }
