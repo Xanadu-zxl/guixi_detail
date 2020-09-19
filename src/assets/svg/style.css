@@ -27,6 +27,8 @@
 
 .icon-community:before {
   content: '\e900';
+  color: #2196f3;
+  line-height: 24px;
 }
 .icon-dangyuan:before {
   content: '\e901';
@@ -39,6 +41,8 @@
 }
 .icon-jifen:before {
   content: '\e904';
+  color: #ff9800;
+  line-height: 24px;
 }
 .icon-juzhen:before {
   content: '\e905';
@@ -54,6 +58,8 @@
 }
 .icon-search:before {
   content: '\e909';
+  color: #e41614;
+  line-height: 24px;
 }
 .icon-shichuang:before {
   content: '\e90a';
