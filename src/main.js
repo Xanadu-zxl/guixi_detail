@@ -10,6 +10,7 @@ import VueCookies from 'vue-cookies'
 import 'view-design/dist/styles/iview.css'
 import '@vant/touch-emulator'
 import { Table, Page, Select } from 'view-design'
+
 import {
   Tab,
   Tabs,
@@ -17,6 +18,7 @@ import {
   TabbarItem,
   Collapse,
   CollapseItem,
+  Uploader,
   List,
   Field,
   Picker,
@@ -51,6 +53,7 @@ Vue.use(DropdownItem)
 Vue.use(Pagination)
 Vue.use(Tab)
 Vue.use(Tabs)
+Vue.use(Uploader)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(DatetimePicker)

@@ -32,6 +32,10 @@ export default {
   getFormResponsesAPI(formID) {
     return http.get(`/api/v4/forms/${formID}/responses`, '', headerV4)
   },
+  // 获取表单所有数据
+  getResponsesAPI(formID) {
+    return http.get(`/api/v4/forms/${formID}/responses`, '', headerV4)
+  },
   // 获取单条数据
   getResFormAPI(dataID) {
     return http.get(`/api/v4/responses/${dataID}`, '', headerV4)
@@ -47,5 +51,14 @@ export default {
   // sql查询
   getSqlJsonAPI(sql) {
     return http.get(`/api/table_mappers/json_api/execute_select_sql?sql=` + sql, '', headerSQL)
+  },
+  // 上传附件
+  getUptokenAPI() {
+    return http.get(`/api/v4/attachments/uptoken?purpose=create_responses`, '', headerV4)
+  },
+  // 上传7牛
+  postQiNiuApi(data, headers) {
+    headers.Authorization = headerV4.Authorization
+    return http.post('https://up.qbox.me/', data, headers)
   },
 }
