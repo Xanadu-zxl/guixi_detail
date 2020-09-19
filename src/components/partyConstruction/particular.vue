@@ -10,8 +10,6 @@
             <div class="signing-content">
               <img class="img" :src="imgUrl[0]" alt="" />
               <van-uploader v-model="uploader" multiple :after-read="afterRead" />
-
-              <van-icon name="edit" @click="clickRightIcon(field)" />
             </div>
           </div>
           <p v-else-if="field.identity_key === 'phone1'">
@@ -106,9 +104,7 @@ export default {
       })
     },
     clickRightIcon(field) {
-      if (field.identity_key === 'phone1') {
-        window.location.href = 'https://gxzh.cdht.gov.cn/namespaces/1/yet_another_workflow/flows/721/journeys/new'
-      }
+      window.location.href = 'https://gxzh.cdht.gov.cn/namespaces/1/yet_another_workflow/flows/721/journeys/new'
     },
     // 文件的上传
     afterRead(file) {
