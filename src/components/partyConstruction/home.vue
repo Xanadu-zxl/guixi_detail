@@ -4,7 +4,7 @@
       <div class="banner">
         <img class="img" src="../../assets/img/banner.png" alt="" />
       </div>
-      <van-loading type="spinner" v-show="showLoading" vertical>加载中...</van-loading>
+      <van-loading type="spinner" v-show="showLoading" vertical></van-loading>
 
       <div class="content" v-show="!showLoading">
         <div class="item" v-for="item in list" :key="item.id">
@@ -13,7 +13,9 @@
         </div>
       </div>
 
-      <van-cell icon="phone" class="phone" title="电话咨询" is-link v-show="!showLoading" />
+      <a :href="'tel:' + '028-85218279'" class="information-right">
+        <van-cell icon="phone" class="phone" title="电话咨询" is-link v-show="!showLoading" />
+      </a>
       <footer class="footer" v-show="!showLoading">
         <p>地址：四川省成都市武侯区天仁路176号</p>
       </footer>
@@ -44,9 +46,6 @@ export default {
       this.showLoading = false
     })
     document.title = '桂溪党建'
-    api.getResponsesAPI(150).then((res) => {
-      console.log(res.data)
-    })
   },
 }
 </script>
