@@ -122,7 +122,7 @@ export default {
   }
 
   .footer {
-    margin: 20px auto 50px;
+    margin: 20px auto 0px;
     font-size: 12px;
     text-align: center;
     color: #ffffff;
