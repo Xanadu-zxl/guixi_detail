@@ -22,7 +22,7 @@
           @blur="onSearch"
         />
       </div>
-      <img class="export" @click="exportData" src="@/assets/img/table_btn_download.png" />
+      <img class="export" @click="exportData" src="@/assets/img/table_btn_download.jpg" />
     </header>
     <div class="table">
       <Table

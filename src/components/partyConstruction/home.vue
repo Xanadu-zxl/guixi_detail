@@ -2,7 +2,7 @@
   <div class="home">
     <div class="mian">
       <div class="banner">
-        <img class="img" src="../../assets/img/banner.png" alt="" />
+        <img class="img" src="../../assets/img/banner.jpg" alt="" />
       </div>
       <van-loading type="spinner" v-show="showLoading" vertical></van-loading>
 
@@ -131,7 +131,7 @@ export default {
     text-align: center;
     color: #ffffff;
     opacity: 0.6;
-    background-image: url(./../../assets/img/bg_bottom.png);
+    background-image: url(./../../assets/img/bg_bottom.jpg);
     height: 105px;
     line-height: 105px;
     background-size: cover;
