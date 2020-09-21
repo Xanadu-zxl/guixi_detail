@@ -125,7 +125,7 @@ export default {
   }
 
   .footer {
-    margin: 50px auto;
+    margin: 20px auto 50px;
     font-size: 12px;
     line-height: 12px;
     text-align: center;
