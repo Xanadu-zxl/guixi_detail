@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="header-right">
-          <router-link to="particular" class="detailed">
+          <router-link to="particular" class="detailed" v-show="detailShow">
             详细信息
           </router-link>
         </div>
@@ -53,6 +53,7 @@ export default {
       showLoading: true,
       imgUrl: [],
       showPopup: false,
+      detailShow: true,
     }
   },
   components: {
@@ -90,6 +91,7 @@ export default {
         })
       } else {
         this.$toast('暂无你的党员信息！')
+        this.detailShow = false
         this.imgUrl.push(localStorage.getItem('user_imgUrl'))
         this.showLoading = false
         this.party = '暂无党组织信息'
