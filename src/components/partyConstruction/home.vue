@@ -52,9 +52,11 @@ export default {
 <style lang="scss" scoped>
 .home {
   position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
   background: linear-gradient(88.34deg, #b1391a 0%, #ec3017 100%);
-  height: 100%;
-  width: 100%;
 
   .img {
     margin: 0rem auto 1.25rem;
