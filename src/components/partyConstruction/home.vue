@@ -51,11 +51,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .home {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  left: 0px;
   background: linear-gradient(88.34deg, #b1391a 0%, #ec3017 100%);
 
   .img {
@@ -73,7 +68,7 @@ export default {
       box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.03);
       border-radius: 8px;
       height: 8.125rem;
-      width: 10.3125rem;
+      width: 43vw;
       color: #fff;
       background: #0000001a;
       margin: 0.375rem;
@@ -129,7 +124,6 @@ export default {
   .footer {
     margin: 20px auto 50px;
     font-size: 12px;
-    line-height: 12px;
     text-align: center;
     color: #ffffff;
     opacity: 0.6;
