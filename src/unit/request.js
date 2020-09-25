@@ -10,7 +10,7 @@ Vue.use(Toast)
 const service = axios.create({
   // baseURL: '/magnate',
   // 超时时间 单位是ms，这里设置了3s的超时时间
-  timeout: 3 * 1000,
+  timeout: 20 * 1000,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'application/json; application/x-www-form-urlencoded; charset=UTF-8',

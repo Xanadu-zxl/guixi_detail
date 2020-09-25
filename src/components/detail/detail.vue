@@ -1,51 +1,45 @@
 <template>
   <div class="detail_content">
-    <div class="detail-select">
-      <div class="select">
-        <select v-model="searchTitle.value">
-          <option :key="index" :value="option" class="option" v-for="(option, index) in columnsTitle">
-            {{ option }}
-          </option>
-        </select>
-        <van-icon name="arrow-down" />
-      </div>
-    </div>
-
     <header class="header">
       <!-- 筛选条件： -->
-      <div class="header-select">
-        <van-search
-          class="search"
-          shape="round"
-          v-model="search.value"
-          placeholder="请输入搜索关键词"
-          @blur="onSearch"
-        />
+      <div class="detail-select">
+        <div class="select">
+          <select v-model="search.value">
+            <option :key="index" :value="option" class="option" v-for="(option, index) in columnsTitle">
+              {{ option }}
+            </option>
+          </select>
+          <van-icon name="arrow-down" />
+        </div>
       </div>
       <img class="export" @click="exportData" src="@/assets/img/table_btn_download.jpg" />
     </header>
     <div class="table">
       <Table
-        tooltip
-        ref="table"
+        :ellipsis="ellipsis"
         border
         stripe
-        height="680"
+        height="600"
         @on-row-click="rowClick"
         :columns="columns"
         :data="data"
         :loading="loading"
       ></Table>
-      <!-- 分页器 -->
+      <!-- 用于数据导出 -->
+      <Table
+        v-show="tableShow"
+        :ellipsis="ellipsis"
+        ref="table"
+        border
+        stripe
+        height="600"
+        @on-row-click="rowClick"
+        :columns="exportColumns"
+        :data="data"
+        :loading="loading"
+      ></Table>
 
-      <div class="title">共 {{ page.total }} 条</div>
-      <van-pagination
-        v-model="currentPage"
-        :total-items="page.total"
-        :show-page-size="5"
-        @change="currentChange()"
-        force-ellipses
-      />
+      <div class="title">共 {{ page.total }} 条数据</div>
     </div>
 
     <!-- 弹框 -->
@@ -78,46 +72,31 @@ import total from '@/api/total'
 export default {
   data() {
     return {
+      tableShow: false,
+      ellipsis: true,
       currentPage: 1,
       show: false,
       showArr: [],
       showObj: {},
       showVisitArr: [],
       columns: [],
-      columnsTitle: [
-        '全部科室',
-        '火车南站综合管理办公室',
-        '社区发展办公室',
-        '党群办公室',
-        '综合执法中队',
-        '社区治理办公室',
-        '市场监管所',
-        '城市管理办公室',
-        '营商环境建设办公室',
-        '民生办',
-        '政务服务办公室',
-        '劳动就业和社会保障服务办公室',
-        '民政服务办公室',
-        '退役军人服务站',
-        '综合办',
-      ],
+      exportColumns: [],
+      columnsTitle: ['全部类别'],
       data: [],
       page: {
-        pageSize: 13,
-        total: 0,
-        current: 0,
+        total: 0
       },
       loading: true,
       search: {
-        value: '',
-        type: 'department',
+        value: '全部项目',
+        type: 'category'
       },
       searchTitle: {
         value: '全部科室',
-        key: 'department',
+        key: 'department'
       },
-      tableID: 149,
-      showPhone: true,
+      tableID: 198,
+      showPhone: true
     }
   },
   watch: {
@@ -130,18 +109,43 @@ export default {
           this.onSearchTitle(titleValue)
         }
       },
-      deep: true,
+      deep: true
     },
+    search: {
+      handler(newVal, oldVal) {
+        let titleValue = newVal.value
+        if (titleValue === '全部项目') {
+          this.search.value = ''
+          this.onSearch()
+        } else {
+          this.onSearch()
+        }
+      },
+      deep: true
+    }
   },
   mounted() {
     document.title = '桂溪街道数据统计'
+    this.searchTitle.value = this.$route.query.name
+    // 获取类别
+    let sql = `SELECT * FROM guixi_form_1_201 where department ~ '${this.searchTitle.value}';`
+    api.getSqlJsonAPI(sql).then((res) => {
+      const array = []
+      res.data.forEach((ele) => {
+        array.push(ele.category)
+      })
+      this.columnsTitle = Array.from(new Set(array))
+      this.columnsTitle.unshift('全部项目')
+    })
+
     api.getFormAPI(this.tableID).then((res) => {
       // 创建表头
       this.columns = total.createdTableHeadersDetail(res.data.fields)
+      this.exportColumns = total.createdExportHeadersDetail(res.data.fields)
     })
-
     this.getPageData()
-    let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_149;`
+
+    let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}';`
     api.getSqlJsonAPI(sqlCount).then((res) => {
       this.page.total = res.data[0].count
     })
@@ -156,13 +160,15 @@ export default {
     },
     getPageData() {
       this.loading = true
-      let sql = `select * from guixi_form_1_149  ORDER BY created_at DESC limit ${this.page.pageSize} OFFSET ${this.page.current}`
+      let sql = `SELECT * FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}' ORDER BY created_at DESC `
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((element) => {
-          element.created_at = element.created_at.slice(0, 10)
-          if (element.estimated_time) {
-            element.estimated_time = element.estimated_time.slice(0, 10)
-          }
+        res.data.forEach((el) => {
+          const unit = el.unit
+          el.firstYears = `${el.firstYears} ${unit}`
+          el.secendYears = `${el.secendYears} ${unit}`
+          el.thirdYears = `${el.thirdYears} ${unit}`
+          // console.log(el.unit)
+          // console.log(el)
         })
         this.data = res.data
         this.loading = false
@@ -171,7 +177,7 @@ export default {
 
     onSearch() {
       this.loading = true
-      let sql = `select * from guixi_form_1_149  where department ~ '${this.search.value}' or  category ~ '${this.search.value}' or project ~ '${this.search.value}' or  unit ~ '${this.search.value}' ORDER BY created_at  DESC limit ${this.page.pageSize} OFFSET ${this.page.current}`
+      let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' and category ~ '${this.search.value}' ORDER BY created_at DESC`
       api.getSqlJsonAPI(sql).then((res) => {
         res.data.forEach((element) => {
           element.created_at = element.created_at.slice(0, 10)
@@ -183,14 +189,14 @@ export default {
         this.loading = false
       })
 
-      let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_149 where department ~ '${this.search.value}' or  category ~ '${this.search.value}' or project ~ '${this.search.value}' or  unit ~ '${this.search.value}' ; `
+      let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}' and category ~ '${this.search.value}' ; `
       api.getSqlJsonAPI(sqlCount).then((res) => {
         this.page.total = res.data[0].count
       })
     },
     onSearchTitle(title) {
       this.loading = true
-      let sql = `select * from guixi_form_1_149  where ${this.searchTitle.key} ~ '${this.searchTitle.value}' ORDER BY created_at  DESC limit ${this.page.pageSize} OFFSET ${this.page.current}`
+      let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' ORDER BY created_at  DESC`
       api.getSqlJsonAPI(sql).then((res) => {
         res.data.forEach((element) => {
           element.created_at = element.created_at.slice(0, 10)
@@ -202,7 +208,7 @@ export default {
         this.loading = false
       })
 
-      let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_149 where ${this.searchTitle.key} ~ '${this.searchTitle.value}'; `
+      let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}'; `
       api.getSqlJsonAPI(sqlCount).then((res) => {
         this.page.total = res.data[0].count
       })
@@ -215,23 +221,12 @@ export default {
       this.show = false
     },
     exportData() {
-      let sqlCount = `SELECT * FROM guixi_form_1_149; `
-      api.getSqlJsonAPI(sqlCount).then((res) => {
-        res.data.forEach((element) => {
-          element.created_at = element.created_at.slice(0, 10)
-          if (element.estimated_time) {
-            element.estimated_time = element.estimated_time.slice(0, 10)
-          }
-        })
-        this.$refs.table.data = res.data
-        this.$refs.table.exportCsv({
-          filename: '桂溪街道数据统计',
-          quoted: true,
-        })
-        this.onSearch()
+      this.$refs.table.exportCsv({
+        filename: '桂溪街道数据统计',
+        quoted: true
       })
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss">
@@ -288,12 +283,18 @@ export default {
     font-weight: 600;
   }
   .ivu-table-cell {
-    height: 46px;
-    line-height: 46px;
+    padding: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    height: 32px;
+    line-height: 32px;
   }
 
   .ivu-table-row {
-    height: 46px;
+    height: 32px;
   }
   .table {
     margin: 0 auto;
@@ -325,6 +326,11 @@ export default {
   }
   .van-pagination {
     justify-content: center;
+  }
+  .ivu-table td,
+  .ivu-table th {
+    height: 2.5rem;
+    line-height: 2.5rem;
   }
 
   .van-pagination__next,
