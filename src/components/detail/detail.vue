@@ -1,5 +1,7 @@
 <template>
   <div class="detail_content">
+    <div class="detail_content_title">{{ searchTitle.value }}</div>
+
     <header class="header">
       <!-- 筛选条件： -->
       <div class="detail-select">
@@ -47,15 +49,10 @@
       <header class="popup-header">桂溪街道数据统计详情</header>
       <div class="popup">
         <div v-for="item in showArr" :key="item.id">
-          <p v-if="item.identity_key === 'depict'">
+          <p v-if="item.identity_key === 'project'">
             <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
           </p>
-          <p v-else-if="item.identity_key === 'working_area'">
-            <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
-          <p v-else-if="item.identity_key === 'phone'" v-show="showPhone">
-            <van-field readonly autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
+
           <p v-else>
             <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
           </p>
@@ -81,14 +78,14 @@ export default {
       showVisitArr: [],
       columns: [],
       exportColumns: [],
-      columnsTitle: ['全部类别'],
+      columnsTitle: [],
       data: [],
       page: {
         total: 0
       },
       loading: true,
       search: {
-        value: '全部项目',
+        value: '全部类别',
         type: 'category'
       },
       searchTitle: {
@@ -114,7 +111,7 @@ export default {
     search: {
       handler(newVal, oldVal) {
         let titleValue = newVal.value
-        if (titleValue === '全部项目') {
+        if (titleValue === '全部类别') {
           this.search.value = ''
           this.onSearch()
         } else {
@@ -135,7 +132,7 @@ export default {
         array.push(ele.category)
       })
       this.columnsTitle = Array.from(new Set(array))
-      this.columnsTitle.unshift('全部项目')
+      this.columnsTitle.unshift('全部类别')
     })
 
     api.getFormAPI(this.tableID).then((res) => {
@@ -162,15 +159,7 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}' ORDER BY created_at DESC `
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((el) => {
-          const unit = el.unit
-          el.firstYears = `${el.firstYears} ${unit}`
-          el.secendYears = `${el.secendYears} ${unit}`
-          el.thirdYears = `${el.thirdYears} ${unit}`
-          // console.log(el.unit)
-          // console.log(el)
-        })
-        this.data = res.data
+        this.data = total.unitWith(res.data)
         this.loading = false
       })
     },
@@ -179,13 +168,8 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' and category ~ '${this.search.value}' ORDER BY created_at DESC`
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((element) => {
-          element.created_at = element.created_at.slice(0, 10)
-          if (element.estimated_time) {
-            element.estimated_time = element.estimated_time.slice(0, 10)
-          }
-        })
-        this.data = res.data
+        this.data = total.unitWith(res.data)
+
         this.loading = false
       })
 
@@ -198,13 +182,8 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' ORDER BY created_at  DESC`
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((element) => {
-          element.created_at = element.created_at.slice(0, 10)
-          if (element.estimated_time) {
-            element.estimated_time = element.estimated_time.slice(0, 10)
-          }
-        })
-        this.data = res.data
+        this.data = total.unitWith(res.data)
+
         this.loading = false
       })
 
@@ -233,6 +212,12 @@ export default {
 .detail_content {
   width: 100%;
   margin: 0px auto;
+  .detail_content_title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 50px;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
+  }
 
   .header {
     display: flex;
