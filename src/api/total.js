@@ -5,18 +5,50 @@ export default {
     fields.forEach((field) => {
       let column = {}
       switch (field.identity_key) {
-        case 'department':
+        case 'project':
           column.title = field.title
           column.key = field.identity_key
-          column.width = 150
+          column.width = 200
           column.resizable = true
           column.fixed = 'left'
-          break
 
+          break
+        case 'firstYears':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 100
+          column.resizable = true
+          break
+        case 'secendYears':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 100
+          column.resizable = true
+          break
+        case 'thirdYears':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 100
+          column.resizable = true
+          break
+        default:
+          break
+      }
+      if (column.key) {
+        columns.push(column)
+      }
+    })
+    return columns
+  },
+  createdExportHeadersDetail(fields) {
+    let columns = []
+    fields.forEach((field) => {
+      let column = {}
+      switch (field.identity_key) {
         default:
           column.title = field.title
           column.key = field.identity_key
-          column.width = 180
+          column.width = 100
           column.resizable = true
           break
       }
@@ -42,5 +74,5 @@ export default {
       tableList.push(objData)
     })
     return tableList
-  },
+  }
 }

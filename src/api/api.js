@@ -7,11 +7,11 @@ import http from '../unit/http'
 
 let headerV4 = {
   Authorization:
-    'd25adaf98146c4f32c127e6c094f6f672db695970692fc473a9e8e861b304f1a:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.plo6dlWfBGCS9kH8765wWR9aQo_-SyFQw5kRBBio9Y0',
+    'd25adaf98146c4f32c127e6c094f6f672db695970692fc473a9e8e861b304f1a:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.plo6dlWfBGCS9kH8765wWR9aQo_-SyFQw5kRBBio9Y0'
 }
 let headerSQL = {
   Authorization:
-    'gid://slp-table-mapper/Namespace/1&eyJhbGciOiJIUzI1NiJ9.eyJnaWQiOiJnaWQ6Ly9za3lsYXJrL05hbWVzcGFjZS8xIn0.TwAB1xT_B-hn74leeBM_nY82KtewYvd8OiasRrXpZL0',
+    'gid://slp-table-mapper/Namespace/1&eyJhbGciOiJIUzI1NiJ9.eyJnaWQiOiJnaWQ6Ly9za3lsYXJrL05hbWVzcGFjZS8xIn0.TwAB1xT_B-hn74leeBM_nY82KtewYvd8OiasRrXpZL0'
 }
 // admin
 export default {
@@ -60,5 +60,5 @@ export default {
   postQiNiuApi(data, headers) {
     headers.Authorization = headerV4.Authorization
     return http.post('https://up.qbox.me/', data, headers)
-  },
+  }
 }
