@@ -74,5 +74,15 @@ export default {
       tableList.push(objData)
     })
     return tableList
+  },
+  // 单位拼接
+  unitWith(array) {
+    array.forEach((el) => {
+      const unit = el.unit
+      el.firstYears = `${el.firstYears} ${unit}`
+      el.secendYears = `${el.secendYears} ${unit}`
+      el.thirdYears = `${el.thirdYears} ${unit}`
+    })
+    return array
   }
 }
