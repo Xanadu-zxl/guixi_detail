@@ -40,7 +40,7 @@ export default {
     homeNav,
   },
   mounted() {
-    let sql = `select * from guixi_form_1_150 where show='是';`
+    let sql = `select * from guixi_form_1_150 where show='是' ORDER BY created_at ASC;`
     api.getSqlJsonAPI(sql).then((res) => {
       this.list = res.data
       this.showLoading = false
