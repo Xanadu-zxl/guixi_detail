@@ -45,21 +45,19 @@
     </div>
 
     <!-- 弹框 -->
-    <van-popup v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
+    <van-popup class="popup" v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
       <header class="popup-header">桂溪街道数据统计详情</header>
-      <div class="popup">
-        <div class="popup-item">
-          <div v-for="item in showArr" :key="item.id">
-            <p v-if="item.identity_key === 'project'">
-              <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-            </p>
-            <p v-else>
-              <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
-            </p>
-          </div>
+      <div class="popup-item">
+        <div v-for="item in showArr" :key="item.id">
+          <p v-if="item.identity_key === 'project'">
+            <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
+          </p>
+          <p v-else>
+            <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
+          </p>
         </div>
-        <footer class="popup-footer" @click="showPopup">关闭</footer>
       </div>
+      <footer class="popup-footer" @click="showPopup">关闭</footer>
     </van-popup>
   </div>
 </template>
@@ -219,19 +217,16 @@ export default {
     line-height: 50px;
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
   }
-
   .header {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
     width: 90vw;
     margin: 0 auto;
-
     .header-select {
       display: flex;
       border-radius: 20px;
       margin: 15px 0px;
-
       .search {
         border-radius: 20px;
         border: none;
@@ -257,7 +252,6 @@ export default {
   .ivu-table-fixed-header thead tr th {
     padding: 4px;
   }
-
   .ivu-table td,
   .ivu-table th {
     text-align: center;
@@ -278,7 +272,6 @@ export default {
     height: 32px;
     line-height: 32px;
   }
-
   .ivu-table-row {
     height: 32px;
   }
@@ -286,20 +279,16 @@ export default {
     margin: 0 auto;
     position: relative;
   }
-
   .title {
     line-height: 1.25rem;
     height: 1.25rem;
     margin: 1rem;
   }
-
   .van-field__label {
     width: 7rem;
   }
-
   .ivu-page-item:hover {
     border: 1px solid #dcdee2;
-
     a {
       color: black;
     }
@@ -312,7 +301,6 @@ export default {
     height: 2.5rem;
     line-height: 2.5rem;
   }
-
   .van-pagination__next,
   .van-pagination__prev {
     max-width: 6.25rem;
@@ -320,30 +308,28 @@ export default {
   .van-cell {
     border-bottom: 1px solid #ebedf0;
   }
-
-  .popup-header {
-    line-height: 52px;
-    font-size: 16px;
-    font-weight: 600;
-    height: 52px;
-    border-bottom: 1px solid #ebedf0;
-  }
   .popup {
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 
+    .popup-header {
+      line-height: 52px;
+      font-size: 16px;
+      font-weight: 600;
+      height: 52px;
+      border-bottom: 1px solid #ebedf0;
+    }
     .popup-item {
       margin: 30px auto 60px;
       width: 87%;
     }
-
     .popup-footer {
       line-height: 52px;
       font-size: 16px;
       font-weight: 600;
       background: #1989fa;
       width: 100%;
-      position: fixed;
-      bottom: 0px;
       color: #fff;
       height: 52px;
     }
@@ -352,11 +338,9 @@ export default {
     margin: 30px auto 0px;
     width: 90%;
     text-align: left;
-
     .select {
       border-left: 4px solid #1989fa;
       padding-left: 10px;
-
       select {
         -webkit-appearance: none;
         border: none;
