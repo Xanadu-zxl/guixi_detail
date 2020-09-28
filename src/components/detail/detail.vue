@@ -1,5 +1,7 @@
 <template>
   <div class="detail_content">
+    <div class="detail_content_title">{{ searchTitle.value }}</div>
+
     <header class="header">
       <!-- 筛选条件： -->
       <div class="detail-select">
@@ -46,22 +48,18 @@
     <van-popup v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
       <header class="popup-header">桂溪街道数据统计详情</header>
       <div class="popup">
-        <div v-for="item in showArr" :key="item.id">
-          <p v-if="item.identity_key === 'depict'">
-            <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
-          <p v-else-if="item.identity_key === 'working_area'">
-            <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
-          <p v-else-if="item.identity_key === 'phone'" v-show="showPhone">
-            <van-field readonly autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
-          <p v-else>
-            <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
+        <div class="popup-item">
+          <div v-for="item in showArr" :key="item.id">
+            <p v-if="item.identity_key === 'project'">
+              <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
+            </p>
+            <p v-else>
+              <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
+            </p>
+          </div>
         </div>
+        <footer class="popup-footer" @click="showPopup">关闭</footer>
       </div>
-      <footer class="popup-footer" @click="showPopup">关闭</footer>
     </van-popup>
   </div>
 </template>
@@ -81,22 +79,22 @@ export default {
       showVisitArr: [],
       columns: [],
       exportColumns: [],
-      columnsTitle: ['全部类别'],
+      columnsTitle: [],
       data: [],
       page: {
-        total: 0
+        total: 0,
       },
       loading: true,
       search: {
-        value: '全部项目',
-        type: 'category'
+        value: '全部类别',
+        type: 'category',
       },
       searchTitle: {
         value: '全部科室',
-        key: 'department'
+        key: 'department',
       },
       tableID: 198,
-      showPhone: true
+      showPhone: true,
     }
   },
   watch: {
@@ -109,20 +107,20 @@ export default {
           this.onSearchTitle(titleValue)
         }
       },
-      deep: true
+      deep: true,
     },
     search: {
       handler(newVal, oldVal) {
         let titleValue = newVal.value
-        if (titleValue === '全部项目') {
+        if (titleValue === '全部类别') {
           this.search.value = ''
           this.onSearch()
         } else {
           this.onSearch()
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
     document.title = '桂溪街道数据统计'
@@ -135,7 +133,7 @@ export default {
         array.push(ele.category)
       })
       this.columnsTitle = Array.from(new Set(array))
-      this.columnsTitle.unshift('全部项目')
+      this.columnsTitle.unshift('全部类别')
     })
 
     api.getFormAPI(this.tableID).then((res) => {
@@ -162,15 +160,7 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}' ORDER BY created_at DESC `
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((el) => {
-          const unit = el.unit
-          el.firstYears = `${el.firstYears} ${unit}`
-          el.secendYears = `${el.secendYears} ${unit}`
-          el.thirdYears = `${el.thirdYears} ${unit}`
-          // console.log(el.unit)
-          // console.log(el)
-        })
-        this.data = res.data
+        this.data = total.unitWith(res.data)
         this.loading = false
       })
     },
@@ -179,13 +169,8 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' and category ~ '${this.search.value}' ORDER BY created_at DESC`
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((element) => {
-          element.created_at = element.created_at.slice(0, 10)
-          if (element.estimated_time) {
-            element.estimated_time = element.estimated_time.slice(0, 10)
-          }
-        })
-        this.data = res.data
+        this.data = total.unitWith(res.data)
+
         this.loading = false
       })
 
@@ -198,13 +183,8 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' ORDER BY created_at  DESC`
       api.getSqlJsonAPI(sql).then((res) => {
-        res.data.forEach((element) => {
-          element.created_at = element.created_at.slice(0, 10)
-          if (element.estimated_time) {
-            element.estimated_time = element.estimated_time.slice(0, 10)
-          }
-        })
-        this.data = res.data
+        this.data = total.unitWith(res.data)
+
         this.loading = false
       })
 
@@ -223,16 +203,22 @@ export default {
     exportData() {
       this.$refs.table.exportCsv({
         filename: '桂溪街道数据统计',
-        quoted: true
+        quoted: true,
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">
 .detail_content {
   width: 100%;
   margin: 0px auto;
+  .detail_content_title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 50px;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
+  }
 
   .header {
     display: flex;
@@ -307,12 +293,6 @@ export default {
     margin: 1rem;
   }
 
-  .popup {
-    margin: 30px auto;
-    width: 87%;
-    position: relative;
-  }
-
   .van-field__label {
     width: 7rem;
   }
@@ -348,20 +328,28 @@ export default {
     height: 52px;
     border-bottom: 1px solid #ebedf0;
   }
-  .popup-footer {
-    line-height: 52px;
-    font-size: 16px;
-    font-weight: 600;
-    background: #1989fa;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    color: #fff;
-    height: 52px;
-  }
+  .popup {
+    position: relative;
 
+    .popup-item {
+      margin: 30px auto 60px;
+      width: 87%;
+    }
+
+    .popup-footer {
+      line-height: 52px;
+      font-size: 16px;
+      font-weight: 600;
+      background: #1989fa;
+      width: 100%;
+      position: fixed;
+      bottom: 0px;
+      color: #fff;
+      height: 52px;
+    }
+  }
   .detail-select {
-    margin: 30px auto 10px;
+    margin: 30px auto 0px;
     width: 90%;
     text-align: left;
 
