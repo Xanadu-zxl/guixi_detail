@@ -46,15 +46,17 @@
 
     <!-- 弹框 -->
     <van-popup class="popup" v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
-      <header class="popup-header">桂溪街道数据统计详情</header>
-      <div class="popup-item">
-        <div v-for="item in showArr" :key="item.id">
-          <p v-if="item.identity_key === 'project'">
-            <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
-          <p v-else>
-            <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
+      <div>
+        <header class="popup-header">桂溪街道数据统计详情</header>
+        <div class="popup-item">
+          <div v-for="item in showArr" :key="item.id">
+            <p v-if="item.identity_key === 'project'">
+              <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
+            </p>
+            <p v-else>
+              <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
+            </p>
+          </div>
         </div>
       </div>
       <footer class="popup-footer" @click="showPopup">关闭</footer>
