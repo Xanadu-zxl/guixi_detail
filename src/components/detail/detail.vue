@@ -48,17 +48,18 @@
     <van-popup v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
       <header class="popup-header">桂溪街道数据统计详情</header>
       <div class="popup">
-        <div v-for="item in showArr" :key="item.id">
-          <p v-if="item.identity_key === 'project'">
-            <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
-
-          <p v-else>
-            <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
-          </p>
+        <div class="popup-item">
+          <div v-for="item in showArr" :key="item.id">
+            <p v-if="item.identity_key === 'project'">
+              <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
+            </p>
+            <p v-else>
+              <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
+            </p>
+          </div>
         </div>
+        <footer class="popup-footer" @click="showPopup">关闭</footer>
       </div>
-      <footer class="popup-footer" @click="showPopup">关闭</footer>
     </van-popup>
   </div>
 </template>
@@ -81,19 +82,19 @@ export default {
       columnsTitle: [],
       data: [],
       page: {
-        total: 0
+        total: 0,
       },
       loading: true,
       search: {
         value: '全部类别',
-        type: 'category'
+        type: 'category',
       },
       searchTitle: {
         value: '全部科室',
-        key: 'department'
+        key: 'department',
       },
       tableID: 198,
-      showPhone: true
+      showPhone: true,
     }
   },
   watch: {
@@ -106,7 +107,7 @@ export default {
           this.onSearchTitle(titleValue)
         }
       },
-      deep: true
+      deep: true,
     },
     search: {
       handler(newVal, oldVal) {
@@ -118,8 +119,8 @@ export default {
           this.onSearch()
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
     document.title = '桂溪街道数据统计'
@@ -202,10 +203,10 @@ export default {
     exportData() {
       this.$refs.table.exportCsv({
         filename: '桂溪街道数据统计',
-        quoted: true
+        quoted: true,
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">
@@ -292,12 +293,6 @@ export default {
     margin: 1rem;
   }
 
-  .popup {
-    margin: 30px auto;
-    width: 87%;
-    position: relative;
-  }
-
   .van-field__label {
     width: 7rem;
   }
@@ -333,20 +328,28 @@ export default {
     height: 52px;
     border-bottom: 1px solid #ebedf0;
   }
-  .popup-footer {
-    line-height: 52px;
-    font-size: 16px;
-    font-weight: 600;
-    background: #1989fa;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    color: #fff;
-    height: 52px;
-  }
+  .popup {
+    position: relative;
 
+    .popup-item {
+      margin: 30px auto 60px;
+      width: 87%;
+    }
+
+    .popup-footer {
+      line-height: 52px;
+      font-size: 16px;
+      font-weight: 600;
+      background: #1989fa;
+      width: 100%;
+      position: fixed;
+      bottom: 0px;
+      color: #fff;
+      height: 52px;
+    }
+  }
   .detail-select {
-    margin: 30px auto 10px;
+    margin: 30px auto 0px;
     width: 90%;
     text-align: left;
 
