@@ -4,6 +4,11 @@ export default [
     name: 'detail',
     component: () => import(/* webpackChunkName:'detail' */ '@/components/detail/detail'),
   },
+  {
+    path: '/guixi_detail/detailRank',
+    name: 'detailRank',
+    component: () => import(/* webpackChunkName:'detailRank' */ '@/components/detail/detailRank'),
+  },
 
   {
     path: '*',

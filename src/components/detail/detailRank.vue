@@ -1,19 +1,15 @@
 <template>
   <div class="detail_content">
-    <div class="detail_content_title">{{ searchTitle.value }}</div>
+    <div class="detail_content_title">{{ departmentName }}</div>
 
     <header class="header">
-      <span class="select-rail"></span>
       <!-- 筛选条件： -->
-
       <div class="detail-select">
         <div class="select">
-          <select v-model="search.value">
-            <option :key="index" :value="option" class="option" v-for="(option, index) in columnsTitle">
-              {{ option }}
-            </option>
-          </select>
-          <van-icon name="arrow-down" />
+          <span class="select-rail"></span>
+          <Select v-model="screenValue" style="width:160px" placeholder="请选择类别">
+            <Option v-for="item in columnsTitle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
         </div>
       </div>
       <img class="export" @click="exportData" src="@/assets/img/table_btn_download.jpg" />
@@ -23,7 +19,7 @@
         :ellipsis="ellipsis"
         border
         stripe
-        height="600"
+        height="500"
         @on-row-click="rowClick"
         :columns="columns"
         :data="data"
@@ -36,14 +32,14 @@
         ref="table"
         border
         stripe
-        height="600"
+        height="500"
         @on-row-click="rowClick"
         :columns="exportColumns"
         :data="data"
         :loading="loading"
       ></Table>
 
-      <div class="title">共 {{ page.total }} 条数据</div>
+      <div class="title">共 {{ total }} 条数据</div>
     </div>
 
     <!-- 弹框 -->
@@ -52,12 +48,10 @@
         <header class="popup-header">桂溪街道数据统计详情</header>
         <div class="popup-item">
           <div v-for="item in showArr" :key="item.id">
-            <p v-if="item.identity_key === 'project'">
+            <!-- <p v-if="item.identity_key === 'project'">
               <van-field readonly type="textarea" autosize :label="item.title" :value="showObj[item.identity_key]" />
-            </p>
-            <p v-else>
-              <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
-            </p>
+            </p> -->
+            <van-field readonly :label="item.title" :value="showObj[item.identity_key]" />
           </div>
         </div>
       </div>
@@ -74,128 +68,70 @@ export default {
     return {
       tableShow: false,
       ellipsis: true,
-      currentPage: 1,
       show: false,
       showArr: [],
       showObj: {},
-      showVisitArr: [],
       columns: [],
       exportColumns: [],
       columnsTitle: [],
       data: [],
-      page: {
-        total: 0,
-      },
       loading: true,
-      search: {
-        value: '全部类别',
-        type: 'category',
-      },
-      searchTitle: {
-        value: '全部科室',
-        key: 'department',
-      },
-      tableID: 198,
+      total: 0,
+      tableID: '',
+      screenValue: '',
       showPhone: true,
+      departmentName: '',
     }
   },
   watch: {
-    searchTitle: {
-      handler(newVal, oldVal) {
-        let titleValue = newVal.value
-        if (titleValue === '全部科室') {
-          this.onSearch()
-        } else {
-          this.onSearchTitle(titleValue)
-        }
-      },
-      deep: true,
-    },
-    search: {
-      handler(newVal, oldVal) {
-        let titleValue = newVal.value
-        if (titleValue === '全部类别') {
-          this.search.value = ''
-          this.onSearch()
-        } else {
-          this.onSearch()
-        }
-      },
-      deep: true,
+    screenValue(newValue, oldValue) {
+      this.screenData(newValue)
     },
   },
   mounted() {
     document.title = '桂溪街道数据统计'
-    this.searchTitle.value = this.$route.query.name
-    // 获取类别
-    let sql = `SELECT * FROM guixi_form_1_201 where department ~ '${this.searchTitle.value}';`
-    api.getSqlJsonAPI(sql).then((res) => {
-      const array = []
-      res.data.forEach((ele) => {
-        array.push(ele.category)
+    this.departmentName = this.$route.query.name
+    let tableSQL = `SELECT * FROM guixi_form_1_290 where name ~ '${this.departmentName}';`
+    api.getSqlJsonAPI(tableSQL).then((res) => {
+      this.tableID = res.data[0].table_id
+      // 获取类别
+      let sql = `SELECT * FROM guixi_form_1_${this.tableID};`
+      api.getSqlJsonAPI(sql).then((res) => {
+        this.columnsTitle = total.getColumnsTitle(res.data)
       })
-      this.columnsTitle = Array.from(new Set(array))
-      this.columnsTitle.unshift('全部类别')
-    })
-
-    api.getFormAPI(this.tableID).then((res) => {
-      // 创建表头
-      this.columns = total.createdTableHeadersDetail(res.data.fields)
-      this.exportColumns = total.createdExportHeadersDetail(res.data.fields)
-    })
-    this.getPageData()
-
-    let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}';`
-    api.getSqlJsonAPI(sqlCount).then((res) => {
-      this.page.total = res.data[0].count
-    })
-    api.getFormAPI(this.tableID).then((res) => {
-      this.showArr = res.data.fields
+      api.getFormAPI(this.tableID).then((res) => {
+        // 创建表头
+        this.columns = total.createdTableHeadersDetail(res.data.fields)
+        this.exportColumns = total.createdExportHeadersDetail(res.data.fields)
+      })
+      api.getFormAPI(this.tableID).then((res) => {
+        this.showArr = res.data.fields
+      })
+      this.getPageData()
     })
   },
   methods: {
-    currentChange() {
-      this.page.current = this.page.pageSize * (this.currentPage - 1)
-      this.onSearch()
-    },
     getPageData() {
       this.loading = true
-      let sql = `SELECT * FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}' ORDER BY created_at DESC `
+      let sql = `SELECT * FROM guixi_form_1_${this.tableID} ORDER BY created_at DESC `
       api.getSqlJsonAPI(sql).then((res) => {
         this.data = total.unitWith(res.data)
+        this.total = res.data.length
         this.loading = false
       })
     },
-
-    onSearch() {
+    screenData(value) {
       this.loading = true
-      let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' and category ~ '${this.search.value}' ORDER BY created_at DESC`
+      let sql = `SELECT * FROM guixi_form_1_${this.tableID}  where category ~ '${value}' ORDER BY created_at DESC`
       api.getSqlJsonAPI(sql).then((res) => {
         this.data = total.unitWith(res.data)
-
+        this.total = res.data.length
         this.loading = false
       })
-
-      let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}' and category ~ '${this.search.value}' ; `
-      api.getSqlJsonAPI(sqlCount).then((res) => {
-        this.page.total = res.data[0].count
-      })
     },
-    onSearchTitle(title) {
-      this.loading = true
-      let sql = `SELECT * FROM guixi_form_1_198  where department ~ '${this.searchTitle.value}' ORDER BY created_at  DESC`
-      api.getSqlJsonAPI(sql).then((res) => {
-        this.data = total.unitWith(res.data)
 
-        this.loading = false
-      })
-
-      let sqlCount = `SELECT COUNT(*) FROM guixi_form_1_198 where department ~ '${this.searchTitle.value}'; `
-      api.getSqlJsonAPI(sqlCount).then((res) => {
-        this.page.total = res.data[0].count
-      })
-    },
     rowClick(row, column, data, event) {
+      console.log(row)
       this.show = true
       this.showObj = row
     },
@@ -218,8 +154,8 @@ export default {
   .detail_content_title {
     font-size: 20px;
     font-weight: 600;
-    line-height: 50px;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
+    line-height: 60px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   }
   .header {
     display: flex;
@@ -289,7 +225,12 @@ export default {
     margin: 1rem;
   }
   .van-field__label {
-    width: 7rem;
+    width: 5.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
   .ivu-page-item:hover {
     border: 1px solid #dcdee2;
@@ -323,6 +264,7 @@ export default {
       font-weight: 600;
       height: 52px;
       border-bottom: 1px solid #ebedf0;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
     }
     .popup-item {
       margin: 30px auto 60px;
@@ -339,11 +281,18 @@ export default {
     }
   }
   .detail-select {
-    margin: 30px auto 0px;
+    margin: 20px auto 0px;
     width: 90%;
     text-align: left;
+
     .select {
-      border-left: 4px solid #1989fa;
+      .select-rail {
+        border: 2px solid #1989fa;
+        background: #1989fa;
+        border-radius: 4px;
+        height: 1.75rem;
+        margin-right: 0.5rem;
+      }
       padding-left: 10px;
       select {
         -webkit-appearance: none;

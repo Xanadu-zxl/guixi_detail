@@ -8,30 +8,15 @@ export default {
         case 'project':
           column.title = field.title
           column.key = field.identity_key
-          column.width = 200
+          column.width = 150
           column.resizable = true
           column.fixed = 'left'
-
-          break
-        case 'firstYears':
-          column.title = field.title
-          column.key = field.identity_key
-          column.width = 100
-          column.resizable = true
-          break
-        case 'secendYears':
-          column.title = field.title
-          column.key = field.identity_key
-          column.width = 100
-          column.resizable = true
-          break
-        case 'thirdYears':
-          column.title = field.title
-          column.key = field.identity_key
-          column.width = 100
-          column.resizable = true
           break
         default:
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 100
+          column.resizable = true
           break
       }
       if (column.key) {
@@ -78,11 +63,28 @@ export default {
   // 单位拼接
   unitWith(array) {
     array.forEach((el) => {
+      console.log(el)
       const unit = el.unit
-      el.firstYears = `${el.firstYears} ${unit}`
-      el.secendYears = `${el.secendYears} ${unit}`
-      el.thirdYears = `${el.thirdYears} ${unit}`
+      el.first_years = `${el.first_years} ${unit}`
+      el.secend_years = `${el.secend_years} ${unit}`
+      el.third_years = `${el.third_years} ${unit}`
     })
     return array
-  }
+  },
+  getColumnsTitle(data) {
+    let array = []
+    data.forEach((ele) => {
+      array.push(ele.category)
+    })
+    // 去重
+    array = Array.from(new Set(array))
+    let columnsTitle = []
+    array.forEach((column) => {
+      columnsTitle.push({
+        value: column,
+        label: column,
+      })
+    })
+    return columnsTitle
+  },
 }
