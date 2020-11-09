@@ -15,7 +15,7 @@ export default {
         default:
           column.title = field.title
           column.key = field.identity_key
-          column.width = 100
+          column.width = 120
           column.resizable = true
           break
       }
@@ -55,7 +55,6 @@ export default {
           objData.value = ''
         }
       }
-
       tableList.push(objData)
     })
     return tableList
@@ -63,7 +62,6 @@ export default {
   // 单位拼接
   unitWith(array) {
     array.forEach((el) => {
-      console.log(el)
       const unit = el.unit
       el.first_years = `${el.first_years} ${unit}`
       el.secend_years = `${el.secend_years} ${unit}`
@@ -85,6 +83,7 @@ export default {
         label: column,
       })
     })
+    columnsTitle.reverse()
     return columnsTitle
   },
 }
