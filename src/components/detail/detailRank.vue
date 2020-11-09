@@ -115,7 +115,7 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_${this.tableID} ORDER BY created_at DESC `
       api.getSqlJsonAPI(sql).then((res) => {
-        this.data = total.unitWith(res.data)
+        this.data = res.data
         this.total = res.data.length
         this.loading = false
       })
@@ -124,7 +124,7 @@ export default {
       this.loading = true
       let sql = `SELECT * FROM guixi_form_1_${this.tableID}  where category ~ '${value}' ORDER BY created_at DESC`
       api.getSqlJsonAPI(sql).then((res) => {
-        this.data = total.unitWith(res.data)
+        this.data = res.data
         this.total = res.data.length
         this.loading = false
       })
