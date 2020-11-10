@@ -63,7 +63,8 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: true,
+    // 使用源映射将错误信息位置映射到模块
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

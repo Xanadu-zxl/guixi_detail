@@ -39,8 +39,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         },
       },
       sourceMap: config.build.productionSourceMap,
-      parallel: false,
-      // 使用源映射将错误信息位置映射到模块
+      parallel: true,
     }),
     // extract css into its own file
     new ExtractTextPlugin({
