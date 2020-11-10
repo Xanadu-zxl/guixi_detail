@@ -147,7 +147,7 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .detail_content {
   width: 100%;
   margin: 0px auto;
@@ -188,70 +188,73 @@ export default {
       border-radius: 20px;
     }
   }
-  .ivu-table-header thead tr th,
-  .ivu-table-fixed-header thead tr th {
-    padding: 4px;
-  }
-  .ivu-table td,
-  .ivu-table th {
-    text-align: center;
-    border-bottom: none;
-  }
-  .ivu-table th {
-    color: #fff;
-    background: #1989fa;
-    font-weight: 600;
-  }
-  .ivu-table-cell {
-    padding: 0px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    height: 32px;
-    line-height: 32px;
-  }
-  .ivu-table-row {
-    height: 32px;
-  }
-  .table {
-    margin: 0 auto;
-    position: relative;
-  }
-  .title {
-    line-height: 1.25rem;
-    height: 1.25rem;
-    margin: 1rem;
-  }
-  .van-field__label {
-    width: 5.5rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-  }
-  .ivu-page-item:hover {
-    border: 1px solid #dcdee2;
-    a {
-      color: black;
+
+  /deep/ .table {
+    .ivu-table-header thead tr th,
+    .ivu-table-fixed-header thead tr th {
+      padding: 4px;
     }
-  }
-  .van-pagination {
-    justify-content: center;
-  }
-  .ivu-table td,
-  .ivu-table th {
-    height: 2.5rem;
-    line-height: 2.5rem;
-  }
-  .van-pagination__next,
-  .van-pagination__prev {
-    max-width: 6.25rem;
-  }
-  .van-cell {
-    border-bottom: 1px solid #ebedf0;
+    .ivu-table td,
+    .ivu-table th {
+      text-align: center;
+      border-bottom: none;
+    }
+    .ivu-table th {
+      color: #fff;
+      background: #1989fa;
+      font-weight: 600;
+    }
+    .ivu-table-cell {
+      padding: 0px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      height: 32px;
+      line-height: 32px;
+    }
+    .ivu-table-row {
+      height: 32px;
+    }
+    .table {
+      margin: 0 auto;
+      position: relative;
+    }
+    .title {
+      line-height: 1.25rem;
+      height: 1.25rem;
+      margin: 1rem;
+    }
+    .van-field__label {
+      width: 5.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+    .ivu-page-item:hover {
+      border: 1px solid #dcdee2;
+      a {
+        color: black;
+      }
+    }
+    .van-pagination {
+      justify-content: center;
+    }
+    .ivu-table td,
+    .ivu-table th {
+      height: 2.5rem;
+      line-height: 2.5rem;
+    }
+    .van-pagination__next,
+    .van-pagination__prev {
+      max-width: 6.25rem;
+    }
+    .van-cell {
+      border-bottom: 1px solid #ebedf0;
+    }
   }
   .popup {
     display: flex;
@@ -288,7 +291,6 @@ export default {
     .select {
       .select-rail {
         border: 2px solid #1989fa;
-        background: #1989fa;
         border-radius: 4px;
         height: 1.75rem;
         margin-right: 0.5rem;
