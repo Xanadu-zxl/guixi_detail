@@ -25,6 +25,35 @@ export default {
     })
     return columns
   },
+  // 多维表单表头
+  createdTableHeaders(fields) {
+    let columns = []
+    fields.forEach((field) => {
+      let column = {}
+      switch (field.identity_key) {
+        case 'department':
+          // column.width = 0
+          break
+        case 'category':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 100
+          column.resizable = true
+          column.fixed = 'left'
+          break
+        default:
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 120
+          column.resizable = true
+          break
+      }
+      if (column.key) {
+        columns.push(column)
+      }
+    })
+    return columns
+  },
   createdExportHeadersDetail(fields) {
     let columns = []
     fields.forEach((field) => {
@@ -33,7 +62,7 @@ export default {
         default:
           column.title = field.title
           column.key = field.identity_key
-          column.width = 100
+          column.width = 110
           column.resizable = true
           break
       }
@@ -59,16 +88,7 @@ export default {
     })
     return tableList
   },
-  // 单位拼接
-  unitWith(array) {
-    array.forEach((el) => {
-      const unit = el.unit
-      el.first_years = `${el.first_years} ${unit}`
-      el.secend_years = `${el.secend_years} ${unit}`
-      el.third_years = `${el.third_years} ${unit}`
-    })
-    return array
-  },
+
   getColumnsTitle(data) {
     let array = []
     data.forEach((ele) => {
