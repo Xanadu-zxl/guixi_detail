@@ -20,7 +20,7 @@
         :span-method="handleSpan"
         :ellipsis="ellipsis"
         border
-        height="500"
+        height="700"
         @on-row-click="rowClick"
         :columns="columns"
         :data="data"
@@ -32,9 +32,9 @@
         :ellipsis="ellipsis"
         ref="table"
         border
-        height="500"
+        height="700"
         @on-row-click="rowClick"
-        :columns="exportColumns"
+        :columns="columns"
         :data="data"
         :loading="loading"
       ></Table>
@@ -86,6 +86,8 @@ export default {
   watch: {
     screenValue(newValue, oldValue) {
       this.screenData(newValue)
+
+      this.loading = false
     },
   },
   mounted() {
@@ -133,6 +135,7 @@ export default {
               return [0, 0]
             }
           }
+          this.loading = false
         }
       }
     },
@@ -149,7 +152,7 @@ export default {
           console.log(res)
           this.categoryArray = res.data
         })
-        this.loading = false
+        // this.loading = false
       })
     },
     screenData(value) {
@@ -158,7 +161,12 @@ export default {
       api.getSqlJsonAPI(sql).then((res) => {
         this.data = res.data
         this.total = res.data.length
-        this.loading = false
+        // this.loading = false
+        this.categoryArray = [
+          {
+            count: res.data.length,
+          },
+        ]
       })
     },
 
@@ -172,7 +180,7 @@ export default {
     },
     exportData() {
       this.$refs.table.exportCsv({
-        filename: '桂溪街道数据统计',
+        filename: this.departmentName,
         quoted: true,
       })
     },
