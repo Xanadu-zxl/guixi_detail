@@ -80,7 +80,7 @@ export default {
       showPhone: true,
       departmentName: '',
       categoryArray: [], // 所有类别的数量
-      first: '', // 排序第一类别
+      projectArray: [], // 所有项目的数量
     }
   },
   watch: {
@@ -135,6 +135,26 @@ export default {
               return [0, 0]
             }
           }
+        }
+      }
+      if (columnIndex === 1) {
+        const arr = this.projectArray
+        let len = arr.length
+        let sum = 0
+        let sign = 0
+        let res = 0
+        for (let x = 0; x < len; x++) {
+          res = arr[x].count
+          if (rowIndex === sum && columnIndex === 1) {
+            return [res, 1]
+          }
+          sign = sum
+          sum = sum + res
+          for (let index = sign; index < sum; index++) {
+            if (rowIndex === index && columnIndex === 1) {
+              return [0, 0]
+            }
+          }
           this.loading = false
         }
       }
@@ -144,13 +164,17 @@ export default {
       let sql = `SELECT * FROM guixi_form_1_${this.tableID} ORDER BY created_at DESC`
       api.getSqlJsonAPI(sql).then((res) => {
         this.data = res.data
-        this.first = res.data[0].category
         this.total = res.data.length
         // 分组计数
         let groupSQL = ` select * from (select category,count(1), max(created_at) as time from guixi_form_1_${this.tableID} group by category) te order by time DESC;`
         api.getSqlJsonAPI(groupSQL).then((res) => {
           console.log(res)
           this.categoryArray = res.data
+        })
+        let projectSQL = ` select * from (select project,count(1), max(created_at) as time from guixi_form_1_${this.tableID} group by project) te order by time DESC;`
+        api.getSqlJsonAPI(projectSQL).then((res) => {
+          console.log(res)
+          this.projectArray = res.data
         })
         // this.loading = false
       })
