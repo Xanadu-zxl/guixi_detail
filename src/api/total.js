@@ -37,14 +37,28 @@ export default {
         case 'category':
           column.title = field.title
           column.key = field.identity_key
-          column.width = 100
+          column.width = 20
+          column.resizable = true
+          column.fixed = 'left'
+          break
+        case 'project':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 105
+          column.resizable = true
+          column.fixed = 'left'
+          break
+        case 'data_name':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 105
           column.resizable = true
           column.fixed = 'left'
           break
         default:
           column.title = field.title
           column.key = field.identity_key
-          column.width = 120
+          column.width = 70
           column.resizable = true
           break
       }
