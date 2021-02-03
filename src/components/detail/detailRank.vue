@@ -8,7 +8,9 @@
         <div class="select">
           <span class="select-rail"></span>
           <Select v-model="screenValue" style="width:160px" placeholder="请选择类别">
-            <Option v-for="item in columnsTitle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in columnsTitle" :value="item.value" :key="item.value">{{
+              item.label
+            }}</Option>
           </Select>
         </div>
       </div>
@@ -43,9 +45,15 @@
     </div>
 
     <!-- 弹框 -->
-    <van-popup class="popup" v-model="show" round close-icon="close" :style="{ height: '80%', width: '90%' }">
+    <van-popup
+      class="popup"
+      v-model="show"
+      round
+      close-icon="close"
+      :style="{ height: '80%', width: '90%' }"
+    >
       <div>
-        <header class="popup-header">桂溪街道数据统计详情</header>
+        <header class="popup-header">汇总数据详情</header>
         <div class="popup-item">
           <div v-for="item in showArr" :key="item.id">
             <!-- <p v-if="item.identity_key === 'project'">
@@ -89,7 +97,7 @@ export default {
     },
   },
   mounted() {
-    document.title = '桂溪街道数据统计'
+    document.title = '汇总数据'
     this.departmentName = this.$route.query.name
     let tableSQL = `SELECT * FROM guixi_form_1_290 where name ~ '${this.departmentName}';`
     api.getSqlJsonAPI(tableSQL).then((res) => {
@@ -140,7 +148,7 @@ export default {
     },
     exportData() {
       this.$refs.table.exportCsv({
-        filename: '桂溪街道数据统计',
+        filename: '汇总数据',
         quoted: true,
       })
     },
