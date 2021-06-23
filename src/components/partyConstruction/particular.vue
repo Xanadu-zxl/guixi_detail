@@ -70,30 +70,34 @@ export default {
     api.getFormAPI(this.formID).then((res) => {
       this.formData = total.ListData(res.data.fields)
       const phone = this.userPhone
-      let sql = `select * from guixi_form_1_117 WHERE phone1 ='${phone}' ;`
-      api.getSqlJsonAPI(sql).then((res) => {
-        if (res.data.length !== 0) {
-          this.dataID = res.data[0].response_id
-          api.getResFormAPI(this.dataID).then((res) => {
-            //  赋值
-            res.data.entries.forEach((res) => {
-              if (res.field_id === 7784) {
-                this.imgUrl.push(res.attachment.download_url)
-              } else {
-                this.imgUrl.push(localStorage.getItem('user_imgUrl'))
-              }
-            })
-            this.addValue(res.data.entries, this.formData)
-            this.showLoading = false
-          })
-        } else {
-          this.$toast('暂无你的党员信息！')
-          this.showLoading = false
-        }
-      })
+      this.getPartUser(117, 6521, phone)
     })
   },
   methods: {
+    async getPartUser(formID, id, value) {
+      const params = {}
+      params[`query[${id}]`] = value
+      const { data } = await api.getFormRecord(formID, params)
+
+      if (data.length !== 0) {
+        this.dataID = data[0].id
+        api.getResFormAPI(this.dataID).then((res) => {
+          //  赋值
+          res.data.entries.forEach((res) => {
+            if (res.field_id === 7784) {
+              this.imgUrl.push(res.attachment.download_url)
+            } else {
+              this.imgUrl.push(localStorage.getItem('user_imgUrl'))
+            }
+          })
+          this.addValue(res.data.entries, this.formData)
+          this.showLoading = false
+        })
+      } else {
+        this.$toast('暂无你的党员信息！')
+        this.showLoading = false
+      }
+    },
     addValue(entries, formData) {
       formData.forEach((el) => {
         entries.forEach((element) => {
@@ -104,7 +108,8 @@ export default {
       })
     },
     clickRightIcon(field) {
-      window.location.href = 'https://gxzh.cdht.gov.cn/namespaces/1/yet_another_workflow/flows/721/journeys/new'
+      window.location.href =
+        'https://gxzh.cdht.gov.cn/namespaces/1/yet_another_workflow/flows/721/journeys/new'
     },
     // 文件的上传
     afterRead(file) {
