@@ -7,11 +7,11 @@ import http from '../unit/http'
 
 let headerV4 = {
   Authorization:
-    'd25adaf98146c4f32c127e6c094f6f672db695970692fc473a9e8e861b304f1a:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.plo6dlWfBGCS9kH8765wWR9aQo_-SyFQw5kRBBio9Y0'
+    '7372dee4ff2e6b3876e3b386a336a9171444fba5d3a1e5ae3e23c91d92bb68c6:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.WXenxuBIxXEgy_YSmk-PRoElIK7f_gP995N5vdCqSAo',
 }
 let headerSQL = {
   Authorization:
-    'gid://slp-table-mapper/Namespace/1&eyJhbGciOiJIUzI1NiJ9.eyJnaWQiOiJnaWQ6Ly9za3lsYXJrL05hbWVzcGFjZS8xIn0.TwAB1xT_B-hn74leeBM_nY82KtewYvd8OiasRrXpZL0'
+    'gid://slp-table-mapper/Namespace/1&eyJhbGciOiJIUzI1NiJ9.eyJnaWQiOiJnaWQ6Ly9za3lsYXJrL05hbWVzcGFjZS8xIn0.TwAB1xT_B-hn74leeBM_nY82KtewYvd8OiasRrXpZL0',
 }
 // admin
 export default {
@@ -22,12 +22,18 @@ export default {
   getUserAPI(token) {
     return http.get(`/api/v1/user?access_token=` + token)
   },
-  // 翻版
   // 渲染表单
   getFormAPI(formID) {
     return http.get(`/api/v4/forms/${formID}`, '', headerV4)
   },
-
+  // 查询表单记录
+  getFormRecord(formId, params) {
+    return http.get(
+      `/api/v4/forms/${formId}/responses/search`,
+      params,
+      headerV4,
+    )
+  },
   // 渲染表项
   getFormResponsesAPI(formID) {
     return http.get(`/api/v4/forms/${formID}/responses`, '', headerV4)
@@ -60,5 +66,5 @@ export default {
   postQiNiuApi(data, headers) {
     headers.Authorization = headerV4.Authorization
     return http.post('https://up.qbox.me/', data, headers)
-  }
+  },
 }

@@ -40,12 +40,31 @@ export default {
     homeNav,
   },
   mounted() {
-    let sql = `select * from guixi_form_1_150 where show='是' ORDER BY created_at ASC;`
-    api.getSqlJsonAPI(sql).then((res) => {
-      this.list = res.data
-      this.showLoading = false
-    })
+    this.getFormRecord()
     document.title = '桂溪党建'
+  },
+  methods: {
+    async getFormRecord() {
+      let id = 8022
+      const params = {}
+      params[`query[${id}]`] = '是'
+      const { data } = await api.getFormRecord(150, params)
+      this.setMappedValues(data)
+      this.showLoading = false
+    },
+    setMappedValues(arr) {
+      let dataList = []
+      let key = []
+      arr.forEach((mapped) => {
+        let middle = {}
+        key = Object.keys(mapped.mapped_values)
+        key.forEach((res) => {
+          middle[res] = mapped.mapped_values[res].value[0]
+        })
+        dataList.push(middle)
+      })
+      this.list = dataList
+    },
   },
 }
 </script>
@@ -65,7 +84,8 @@ export default {
     margin: 0 auto;
 
     .item {
-      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.03);
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 2px 4px rgba(0, 0, 0, 0.06),
+        0px 4px 6px rgba(0, 0, 0, 0.03);
       border-radius: 8px;
       height: 8.125rem;
       width: 43vw;
@@ -102,7 +122,8 @@ export default {
 
   .phone {
     width: 94%;
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.03);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 2px 4px rgba(0, 0, 0, 0.06),
+      0px 4px 6px rgba(0, 0, 0, 0.03);
     border-radius: 8px;
     margin: 0.375rem auto;
     background: #0000001a;
@@ -122,14 +143,14 @@ export default {
   }
 
   .footer {
-    margin: 20px auto 0px;
+    margin: 20px auto 50px;
     font-size: 12px;
     text-align: center;
     color: #ffffff;
     opacity: 0.6;
     background-image: url(./../../assets/img/bg_bottom.jpg);
-    height: 105px;
-    line-height: 105px;
+    height: 120px;
+    line-height: 120px;
     background-size: cover;
   }
 }

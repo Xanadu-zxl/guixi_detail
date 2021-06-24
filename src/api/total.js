@@ -37,14 +37,28 @@ export default {
         case 'category':
           column.title = field.title
           column.key = field.identity_key
-          column.width = 100
+          column.width = 20
+          column.resizable = true
+          column.fixed = 'left'
+          break
+        case 'project':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 105
+          column.resizable = true
+          column.fixed = 'left'
+          break
+        case 'data_name':
+          column.title = field.title
+          column.key = field.identity_key
+          column.width = 105
           column.resizable = true
           column.fixed = 'left'
           break
         default:
           column.title = field.title
           column.key = field.identity_key
-          column.width = 120
+          column.width = 70
           column.resizable = true
           break
       }
@@ -92,7 +106,7 @@ export default {
   getColumnsTitle(data) {
     let array = []
     data.forEach((ele) => {
-      array.push(ele.category)
+      array.push(ele.mapped_values.category.value[0])
     })
     // 去重
     array = Array.from(new Set(array))
@@ -103,7 +117,19 @@ export default {
         label: column,
       })
     })
-    columnsTitle.reverse()
     return columnsTitle
+  },
+  setMappedValues(arr) {
+    let dataList = []
+    let key = []
+    arr.forEach((mapped) => {
+      let middle = {}
+      key = Object.keys(mapped.mapped_values)
+      key.forEach((res) => {
+        middle[res] = mapped.mapped_values[res].value[0]
+      })
+      dataList.push(middle)
+    })
+    return dataList
   },
 }

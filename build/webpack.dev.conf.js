@@ -78,6 +78,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       filename: 'index.html',
       template: 'index.html',
       inject: true,
+      favicon: path.resolve('./favicon.ico'),
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
@@ -105,10 +106,12 @@ module.exports = new Promise((resolve, reject) => {
       devWebpackConfig.plugins.push(
         new FriendlyErrorsPlugin({
           compilationSuccessInfo: {
-            messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+            messages: [
+              `Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`,
+            ],
           },
           onErrors: config.dev.notifyOnErrors ? utils.createNotifierCallback() : undefined,
-        })
+        }),
       )
 
       resolve(devWebpackConfig)

@@ -60,22 +60,24 @@ export default {
     myNav,
   },
   mounted() {
+    this.getFormRecord(152, '', '是')
+
     document.title = '党员中心'
     this.name = localStorage.getItem('user_name')
     this.phone = localStorage.getItem('user_phone')
+    this.getPartUser(117, 6521, this.phone)
     if (!this.name) {
       this.showPopup = true
     }
-
-    let sql = `select * from guixi_form_1_152;`
-    api.getSqlJsonAPI(sql).then((res) => {
-      this.list = res.data
-    })
-    let sqlPhone = `select * from guixi_form_1_117 WHERE phone1 ='${this.phone}' ;`
-    api.getSqlJsonAPI(sqlPhone).then((res) => {
-      if (res.data.length !== 0) {
-        this.party = res.data[0].building_party_name
-        this.dataID = res.data[0].response_id
+  },
+  methods: {
+    async getPartUser(formID, id, value) {
+      const params = {}
+      params[`query[${id}]`] = value
+      const { data } = await api.getFormRecord(formID, params)
+      if (data.length !== 0) {
+        this.party = data[0].mapped_values.building_party_name.value[0]
+        this.dataID = data[0].id
         api.getResFormAPI(this.dataID).then((res) => {
           //  赋值
           res.data.entries.forEach((res) => {
@@ -96,7 +98,27 @@ export default {
         this.showLoading = false
         this.party = '暂无党组织信息'
       }
-    })
+    },
+    async getFormRecord(formID, id, value) {
+      const params = {}
+      params[`query[${id}]`] = value
+      const { data } = await api.getFormRecord(formID, params)
+      this.setMappedValues(data)
+      this.showLoading = false
+    },
+    setMappedValues(arr) {
+      let dataList = []
+      let key = []
+      arr.forEach((mapped) => {
+        let middle = {}
+        key = Object.keys(mapped.mapped_values)
+        key.forEach((res) => {
+          middle[res] = mapped.mapped_values[res].value[0]
+        })
+        dataList.push(middle)
+      })
+      this.list = dataList
+    },
   },
 }
 </script>
@@ -143,7 +165,7 @@ export default {
         }
 
         p {
-          line-height: 30px;
+          line-height: 20px;
           font-size: 14px;
           color: #ffffff;
           opacity: 0.6;
@@ -154,7 +176,7 @@ export default {
       .detailed {
         background: #ffffff;
         border-radius: 20px;
-        width: 6.4375rem;
+        width: 5.7375rem;
         height: 2rem;
         line-height: 2rem;
         display: block;
