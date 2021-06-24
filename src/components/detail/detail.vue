@@ -78,6 +78,8 @@ export default {
       departmentName: '',
       categoryArray: [], // 所有类别的数量
       first: '', // 排序第一类别
+      formID: 290,
+      field_id: 0,
     }
   },
   watch: {
@@ -90,25 +92,50 @@ export default {
   mounted() {
     document.title = '汇总数据'
     this.departmentName = this.$route.query.name
-    let tableSQL = `SELECT * FROM guixi_form_1_290 where name ~ '${this.departmentName}';`
-    api.getSqlJsonAPI(tableSQL).then((res) => {
-      this.tableID = res.data[0].table_id
+    this.getFormRecord(this.formID, 9126, this.departmentName)
+  },
+  methods: {
+    async getFormRecord(formID, id, value) {
+      const params = {}
+      params[`query[${id}]`] = value
+      const { data } = await api.getFormRecord(formID, params)
+      this.tableID = data[0].mapped_values.table_id.value[0]
       // 获取类别
-      let sql = `SELECT * FROM guixi_form_1_${this.tableID};`
-      api.getSqlJsonAPI(sql).then((res) => {
-        this.columnsTitle = total.getColumnsTitle(res.data)
-      })
+      this.setColumnsTitle(this.tableID)
       api.getFormAPI(this.tableID).then((res) => {
         // 创建表头
         this.columns = total.createdTableHeaders(res.data.fields)
       })
-      api.getFormAPI(this.tableID).then((res) => {
+      await api.getFormAPI(this.tableID).then((res) => {
         this.showArr = res.data.fields
+        res.data.fields.forEach((res) => {
+          if (res.identity_key === 'category') {
+            this.field_id = res.id
+          }
+        })
       })
-      this.getPageData()
-    })
-  },
-  methods: {
+      await this.getPageData(this.tableID)
+    },
+
+    async setColumnsTitle(formID, id, value) {
+      const params = {}
+      params[`query[${id}]`] = value
+      const { data } = await api.getFormRecord(formID, params)
+      this.columnsTitle = total.getColumnsTitle(data)
+      // 分组计数
+      let arr = []
+      this.columnsTitle.forEach((column, index) => {
+        let num = 1
+        data.forEach((res) => {
+          if (res.mapped_values.category.value[0] === column.value) {
+            arr[index] = {}
+            arr[index].count = num++
+          }
+        })
+      })
+      this.categoryArray = arr
+      this.loading = false
+    },
     // 合并单元格
     handleSpan({ row, column, rowIndex, columnIndex }) {
       // 第一次合并的行数量
@@ -135,38 +162,28 @@ export default {
         }
       }
     },
-    getPageData() {
-      this.loading = true
-      let sql = `SELECT * FROM guixi_form_1_${this.tableID} ORDER BY created_at DESC`
-      api.getSqlJsonAPI(sql).then((res) => {
-        this.data = res.data
-        this.first = res.data[0].category
-        this.total = res.data.length
-        // 分组计数
-        let groupSQL = ` select * from (select category,count(1), max(created_at) as time from guixi_form_1_${this.tableID} group by category) te order by time DESC;`
-        api.getSqlJsonAPI(groupSQL).then((res) => {
-          console.log(res)
-          this.categoryArray = res.data
-        })
-      })
+    async getPageData(formID) {
+      const { data } = await api.getFormRecord(formID)
+      this.data = total.setMappedValues(data)
+      this.first = data[0].mapped_values.category.value[0]
+      this.total = data.length
     },
-    screenData(value) {
+    async screenData(value) {
       this.loading = true
-      let sql = `SELECT * FROM guixi_form_1_${this.tableID}  where category ~ '${value}' ORDER BY created_at DESC`
-      api.getSqlJsonAPI(sql).then((res) => {
-        this.data = res.data
-        this.total = res.data.length
-        // this.loading = false
-        this.categoryArray = [
-          {
-            count: res.data.length,
-          },
-        ]
-      })
-    },
+      const params = {}
+      params[`query[${this.field_id}]`] = value
+      const { data } = await api.getFormRecord(this.tableID, params)
 
+      this.data = total.setMappedValues(data)
+      this.total = data.length
+      this.loading = false
+      this.categoryArray = [
+        {
+          count: data.length,
+        },
+      ]
+    },
     rowClick(row, column, data, event) {
-      console.log(row)
       this.show = true
       this.showObj = row
     },
